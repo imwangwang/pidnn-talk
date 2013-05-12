@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	
-	<title>slides by cp, who forgot to edit the title</title>
+	<title>PID Neural Networks</title>
 	
 	<meta name="description" content="">
 	<meta name="author" content="">
@@ -47,12 +47,139 @@
 <!-- Begin slides -->
 
 
-<section class="slide" id="title-slide">
-<h1>Title</h1>
+<section class="slide" id="title">
+<h1>PID Neural Networks</h1>
 </section>
 
 <section class="slide">
+	<h2>Classic Control-Feedback Problem</h2>
+
+	<p>The goal of controller &mdash; make system produce desired output
+	
+	<img src="images/feedback-system-1.png"></img>
+	</p>
 </section>
+
+<section class="slide">
+	<h2>Classic Control-Feedback Problem</h2>
+	<p>
+		Controller takes target value $r(t)$ and feedback $y(t)$ and produces system input $v(t)$
+		<img src="images/feedback-system-2.png"></img>
+	</p>
+</section>
+
+<section class="slide">
+	<h2>Classic Control-Feedback Problem</h2>
+	<p>
+		System generates new output $y(t)$ and stores it as a feedback
+		<img src="images/feedback-system-3.png"></img>
+	</p>
+</section>
+
+<section class="slide" id="pidnn-controller">
+	<h2>PID Neural Network Controller</h2>
+	<p>
+		Controller based on a neural network with 2-3-1 structure
+		<img src="images/pidnn-system.png"></img>
+	</p>
+</section>
+
+<section class="slide" id="p-neuron">
+	<h2>P-neuron</h2>
+	<p>
+		
+		<img src="images/pidnn-structure-1.png"></img>
+		P-neuron transfer function:
+		$$ x(t) = \begin{cases}
+			-1 & u(t) < -1 \\ 
+			u(t) & -1 \le u(t) \le 1 \\
+			1 & u(t) > 1 
+		\end{cases}$$
+
+		$u(t)$ &mdash; neuron input <br>
+		$x(t)$ &mdash; neuron output
+	</p>
+</section>
+
+<section class="slide" id="i-neuron">
+	<h2>I-neuron</h2>
+	<p>
+		<img src="images/pidnn-structure-2.png"></img>
+		I-neuron transfer function:
+		$$ x(t) = \begin{cases}
+			-1 & x(t) < -1 \\ 
+			x(t-1)+u(t) & -1 \le x(t) \le 1 \\
+			1 & x(t) > 1 
+		\end{cases}$$
+
+		$x(t-1)$ &mdash; previous output
+	</p>
+</section>
+
+<section class="slide" id="d-neuron">
+	<h2>D-neuron</h2>
+	<p>
+		
+		<img src="images/pidnn-structure-3.png"></img>
+		D-neuron transfer function:
+			$$ x(t) = \begin{cases}
+			-1 & x(t) < -1 \\ 
+			u(t)-u(t-1) & -1 \le x(t) \le 1 \\
+			1 & x(t) > 1 
+		\end{cases}$$
+
+		$u(t-1)$ &mdash; previous input
+	</p>
+</section>
+
+<section class="slide" id="learning-process">
+	<h2>Learning Process</h2>
+	<p>
+		The aim of PIDNN controller is to minimize:
+			$$ J = \sum\limits_{t=1}^N E_t = \frac{1}{N} \sum\limits_{t=1}^N(r(t) - y(t))^2 $$
+	</p>
+	<p>
+		$r(t)$ &mdash; desired system output <br>
+		$y(t)$ &mdash; real system output (feedback) <br>
+		$N$ &mdash; number of samples <br>
+
+	</p>
+</section>
+
+<section class="slide" id="error-prop-1">
+	<h2>Error Propagation</h2>
+	<img src="images/error-prop-1.png"></img>
+
+	$$ w_i(n+1) = w_i(n) - \eta \frac{\partial J}{\partial w_i}$$
+	<p class="slide">
+		$$ \frac{\partial J}{\partial w_i} \approx -\frac{2}{N} \sum\limits_{t=1}^N (r(t) - y(t)) \frac{y(t)-y(t-1)}{v(t)-v(t-1)} \dot{x}_i(t) $$ 
+	</p>
+	<p class="slide">
+		$$ \frac{\partial J}{\partial w_i} \approx - \sum\limits_{t=1}^N \delta(t) \dot{x}_i(t) $$ 
+	</p>
+</section>
+
+<section class="slide" id="error-prop-2">
+	<h2>Error Propagation</h2>
+	<img src="images/error-prop-2.png"></img>
+
+	$$ w_{ij}(n+1) = w_{ij}(n) - \eta \frac{\partial J}{\partial w_{ij}}$$
+	<p class="slide">
+		$$ \frac{\partial J}{\partial w_ij} \approx -\sum\limits_{t=1}^N \delta(t)\frac{\dot{x}_j(t)-\dot{x}_j(t-1)}{\dot{u}_j(t)-\dot{u}_j(t-1)} w_j x_i(t) $$ 
+	</p>
+</section>
+
+<section class="slide" id="references">
+	<h2>References</h2>
+	<ol>
+		<li>PID Neural Networks for Time-Delay Systems &mdash; H.L. Shu, Y. Pi (2000)</li>
+		<li>Decoupled Temperature Control System Based on PID Neural Network &mdash; H.L. Shu, Y. Pi (2005)</li>
+		<li><a href="http://www.cds.caltech.edu/~murray/courses/cds101/fa02/caltech/astrom.html">Control System Design (Chapter 6) </a> &mdash; Karl Johan Åström (2002)</li>
+	</ol>
+</section>	
+
+
+
 
 <!-- END OF SLIDES -->
 
