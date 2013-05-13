@@ -82,7 +82,7 @@ $(function() {
 		   'chartArea': {'width': '100%', 'height': '100%'}
 		};
 
-		var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+		var chart = new google.visualization.LineChart(document.getElementById('pid-chart'));
 		chart.draw(data, options);
 	}
 
