@@ -40,6 +40,83 @@
 						   displayMath: [['\\[','\\]'], ['$$','$$']]}});
 	</script>
 	<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+	<!-- Google JS API (for charts) -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript"> 
+ 		google.load("visualization", "1", {packages:["corechart"]});
+	</script>
+
+	<!-- Tangle -->
+    <script type="text/javascript" src="http://worrydream.com/Tangle/Tangle.js"></script>
+
+    <!-- TangleKit -->
+    <link rel="stylesheet" href="http://worrydream.com/Tangle/TangleKit/TangleKit.css" type="text/css">
+    <script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/mootools.js"></script>
+    <script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/sprintf.js"></script>
+    <script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/BVTouchable.js"></script>
+    <script type="text/javascript" src="http://worrydream.com/Tangle/TangleKit/TangleKit.js"></script>
+
+	<style>
+		@-webkit-keyframes scrolling-background { 
+			from { background-position: 0px 0px; }
+		  	to { background-position: 150px 0px; }
+		}
+
+		@keyframes scrolling-background { 
+			from { background-position: 0px 0px; }
+		  	to { background-position: 150px 0px; }
+		}
+
+		.scrolling-window {
+			width : 150px;
+			height: 150px;
+			border-radius: 150px;
+			
+			-webkit-animation: scrolling-background 3s linear 0s infinite;
+			   -moz-animation: scrolling-background 3s linear 0s infinite;
+	            -ms-animation: scrolling-background 3s linear 0s infinite;
+	             -o-animation: scrolling-background 3s linear 0s infinite;
+	                animation: scrolling-background 3s linear 0s infinite;
+		}
+
+		#container {
+		    width:100%;
+		    text-align:center;
+		}
+
+		#left {
+		    float:left;
+		    width:150px;
+		}
+
+		#center {
+		    display: inline-block;
+		    margin:0 auto;
+		    width:150px;
+		}
+
+		#right {
+		    float:right;
+		    width:150px;
+		}
+
+		#scrolling-target {
+			background-image:url(images/target-pattern.png);  
+			border:2px solid #555555;
+		}
+
+		#scrolling-controller {
+			background-image:url(images/controller-pattern.png);
+			border:2px solid #555555;
+		}
+
+		#scrolling-system {
+			background-image:url(images/system-pattern.png);  
+			border:2px solid #555555;
+		}
+	</style>
 </head>
 
 <body class="deck-container">
@@ -51,30 +128,49 @@
 <h1>PID Neural Networks</h1>
 </section>
 
+
 <section class="slide">
 	<h2>Classic Control-Feedback Problem</h2>
 
-	<p>The goal of controller &mdash; make system produce desired output
+	<p>
+		Controller takes target value $r(t)$ and feedback $y(t)$ and produces system input $v(t)$. System generates new output $y(t)$ and stores it as a feedback.
+	</p>
+
+	<div id="container">
+		<div id="left">
+			<div class="slide scrolling-window" id="scrolling-target"></div>
+	 	</div>
+	  <div id="center">
+	  		<div class="slide scrolling-window" id="scrolling-controller"></div>
+	  </div>
+	  <div id="right">
+	  		<div class="slide scrolling-window" id="scrolling-system"></div>
+	  </div>
+	</div>
+
+	<img src="images/feedback-system.png"></img>
+</section>
+
+
+<section class="slide" id="pid-demo">
+	<h2>PID controller</h2>
+	$$e(t) = r(t)-y(t)$$
+    $$ v(t) = K_p e(t) + K_i \int\limits_0^{t} e(\tau)d \tau + K_d \frac{de(t)}{dt} $$
 	
-	<img src="images/feedback-system-1.png"></img>
-	</p>
+    <script type="text/javascript" src="demo/pid-demo.js"></script>
+    
+    <div id="chart_div" style="height:250px;"></div>
+	
+	$K_p=$ <span data-var="KP" class="TKAdjustableNumber"  data-min="0.0" data-max="1.0" data-format="%.2f" data-step="0.01"></span>,
+
+	$K_i=$ <span data-var="KI" class="TKAdjustableNumber"  data-min="0.0" data-max="1.0" data-format="%.2f" data-step="0.01"></span>,
+
+	$K_d=$ <span data-var="KD" class="TKAdjustableNumber"  data-min="0.0" data-max="3.0" data-format="%.2f" data-step="0.05"></span>
+	
 </section>
 
-<section class="slide">
-	<h2>Classic Control-Feedback Problem</h2>
-	<p>
-		Controller takes target value $r(t)$ and feedback $y(t)$ and produces system input $v(t)$
-		<img src="images/feedback-system-2.png"></img>
-	</p>
-</section>
 
-<section class="slide">
-	<h2>Classic Control-Feedback Problem</h2>
-	<p>
-		System generates new output $y(t)$ and stores it as a feedback
-		<img src="images/feedback-system-3.png"></img>
-	</p>
-</section>
+
 
 <section class="slide" id="pidnn-controller">
 	<h2>PID Neural Network Controller</h2>
@@ -174,11 +270,11 @@
 	<ol>
 		<li>PID Neural Networks for Time-Delay Systems &mdash; H.L. Shu, Y. Pi (2000)</li>
 		<li>Decoupled Temperature Control System Based on PID Neural Network &mdash; H.L. Shu, Y. Pi (2005)</li>
+		<li>Adaptive System Control with PID Neural Networks  &mdash; F. Shahrakia, M.A. Fanaeib, A.R. Arjomandzadeha (2009)</li>
 		<li><a href="http://www.cds.caltech.edu/~murray/courses/cds101/fa02/caltech/astrom.html">Control System Design (Chapter 6) </a> &mdash; Karl Johan Åström (2002)</li>
+
 	</ol>
 </section>	
-
-
 
 
 <!-- END OF SLIDES -->
