@@ -1,9 +1,9 @@
 $(function() {
 
 	var Settings = function() {
-		this.dt 	= 0.01;
-		this.target = 0.08;
-		this.M 		= 50;
+		this.dt 	= 0.005;
+		this.target = 0.5;
+		this.M 		= 2;
 	};
 
  	var settings = new Settings();
@@ -77,7 +77,7 @@ $(function() {
 		];
 
 		this.hidden_weights = [
-			[1, 1, 10]
+			[1, 1, 6]
 		];
 
 		this.output_layer = [
@@ -173,7 +173,7 @@ $(function() {
 
 					delta *= (-2 / m);
 
-					this.input_weights[i][j] -= dt*dt * delta;
+					this.input_weights[i][j] -= dt * delta;
 				}
 			}
 
@@ -199,11 +199,9 @@ $(function() {
 
 			this.update_error( error );
 			
-
-
 			var KP = 1;
 			var KD = 1;
-			var KI = 0;
+			var KI = 1;
 			return KP * error + KD * deriv + KI * error;
 		};
 
@@ -226,7 +224,7 @@ $(function() {
 
 	function drawChart() {
 		var M = settings.M;
-		var N = 500;
+		var N = 300;
 
 		var pid   = new PID(M);
 		var pidnn = new PIDNN(M);
@@ -263,7 +261,9 @@ $(function() {
 		  backgroundColor: { fill:'transparent' },
 		 	legend : { position : 'bottom'},
 		  tooltip : { trigger : 'none'},
-		   'chartArea': {'width': '80%', 'height': '80%'}
+		   'chartArea': {'width': '100%', 'height': '80%'},
+		   fontName : 'Computer Modern Bright',
+		   fontSize : 18
 		};
 
 		var chart = new google.visualization.LineChart(document.getElementById('pidnn-chart'));
